@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "612133255849",
+    "project_id": "servermanagementapp-f6996",
+    "storage_bucket": "servermanagementapp-f6996.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:612133255849:android:e77ed60ec1b25692bdc7b8",
+        "android_client_info": {
+          "package_name": "dev.arvind.androidtask"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBK6oBQP_U6mCVypcjeWBbRoMCPYD0ecfE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
