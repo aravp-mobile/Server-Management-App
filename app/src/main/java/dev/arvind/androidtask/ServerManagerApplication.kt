@@ -21,6 +21,11 @@ class ServerManagerApplication : Application(), Configuration.Provider {
     @Inject
     lateinit var workerFactory: HiltWorkerFactory
 
+    override val workManagerConfiguration: Configuration =
+        Configuration.Builder()
+            .setWorkerFactory(workerFactory)
+            .build()
+
     override fun onCreate() {
         super.onCreate()
         createNotificationChannel()
@@ -54,8 +59,4 @@ class ServerManagerApplication : Application(), Configuration.Provider {
             )
     }
 
-    override val workManagerConfiguration: Configuration =
-        Configuration.Builder()
-            .setWorkerFactory(workerFactory)
-            .build()
 }
