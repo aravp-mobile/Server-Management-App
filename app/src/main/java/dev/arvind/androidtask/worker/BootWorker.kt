@@ -1,6 +1,7 @@
 package dev.arvind.androidtask.worker
 
 import android.content.Context
+import android.util.Log
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
@@ -22,6 +23,7 @@ class BootWorker @AssistedInject constructor(
 
     override suspend fun doWork(): Result {
         return try {
+            Log.d("BootWorker", "Starting server boot process...")
             val serverId = inputData.getString("server_id")
                 ?: return Result.failure()
 
@@ -35,11 +37,13 @@ class BootWorker @AssistedInject constructor(
                     "Server Booted",
                     "Server $serverId is now running"
                 )
+                Log.d("BootWorker", "Server boot process completed.")
                 Result.success()
             } else {
                 Result.retry()
             }
         } catch (e: Exception) {
+            Log.d("BootWorker", "Server boot process failed.", e)
             Result.failure()
         }
     }

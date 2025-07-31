@@ -1,6 +1,7 @@
 package dev.arvind.androidtask.worker
 
 import android.content.Context
+import android.util.Log
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
@@ -17,14 +18,20 @@ class BillingWorker @AssistedInject constructor(
 
     override suspend fun doWork(): Result {
         return try {
+            Log.d("BillingWorker", "Starting billing calculation...")
             val result = calculateBillingUseCase()
 
+            // Simulate work for now
+            kotlinx.coroutines.delay(1000)
+
             if (result.isSuccess) {
+                Log.d("BillingWorker", "Billing calculation completed successfully.")
                 Result.success()
             } else {
                 Result.retry()
             }
         } catch (e: Exception) {
+            Log.d("BillingWorker", "Billing calculation failed.", e)
             Result.failure()
         }
     }

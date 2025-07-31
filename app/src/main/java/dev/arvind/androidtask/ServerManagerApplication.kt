@@ -9,6 +9,8 @@ import androidx.work.Configuration
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
+import com.google.firebase.FirebaseApp
+import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.HiltAndroidApp
 import dev.arvind.androidtask.utils.Constants
 import dev.arvind.androidtask.worker.BillingWorker
@@ -21,13 +23,20 @@ class ServerManagerApplication : Application(), Configuration.Provider {
     @Inject
     lateinit var workerFactory: HiltWorkerFactory
 
-    override val workManagerConfiguration: Configuration =
-        Configuration.Builder()
+    override val workManagerConfiguration: Configuration
+        get() = Configuration.Builder()
             .setWorkerFactory(workerFactory)
             .build()
 
     override fun onCreate() {
         super.onCreate()
+
+        // Initialize Firebase explicitly
+        FirebaseApp.initializeApp(this)
+
+        // Enable Firestore logging for debugging
+        FirebaseFirestore.setLoggingEnabled(true)
+
         createNotificationChannel()
         scheduleBillingWorker()
     }
@@ -51,12 +60,12 @@ class ServerManagerApplication : Application(), Configuration.Provider {
         val billingWork = PeriodicWorkRequestBuilder<BillingWorker>(15, TimeUnit.MINUTES)
             .build()
 
-        WorkManager.getInstance(this)
-            .enqueueUniquePeriodicWork(
-                "billing_work",
-                ExistingPeriodicWorkPolicy.KEEP,
-                billingWork
-            )
+        val workManager = WorkManager.getInstance(applicationContext)
+        workManager.enqueueUniquePeriodicWork(
+            "billing_work",
+            ExistingPeriodicWorkPolicy.KEEP,
+            billingWork
+        )
     }
 
 }

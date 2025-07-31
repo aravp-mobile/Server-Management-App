@@ -43,6 +43,25 @@ class AuthViewModel @Inject constructor(
             }
         }
     }
+
+    fun signUp(email: String, password: String) {
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(isLoading = true, error = null)
+
+            try {
+                auth.createUserWithEmailAndPassword(email, password).await()
+                _uiState.value = _uiState.value.copy(
+                    isLoading = false,
+                    isAuthenticated = true
+                )
+            } catch (e: Exception) {
+                _uiState.value = _uiState.value.copy(
+                    isLoading = false,
+                    error = e.message
+                )
+            }
+        }
+    }
 }
 
 data class AuthUiState(

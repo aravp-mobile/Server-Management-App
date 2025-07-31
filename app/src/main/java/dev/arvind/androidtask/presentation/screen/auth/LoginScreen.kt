@@ -16,6 +16,7 @@ fun LoginScreen(
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var isSignUpMode by remember { mutableStateOf(false) }
     val uiState by viewModel.uiState.collectAsState()
 
     LaunchedEffect(uiState.isAuthenticated) {
@@ -60,7 +61,13 @@ fun LoginScreen(
         Spacer(modifier = Modifier.height(24.dp))
 
         Button(
-            onClick = { viewModel.login(email, password) },
+            onClick = {
+                if (isSignUpMode) {
+                    viewModel.signUp(email, password)
+                } else {
+                    viewModel.login(email, password)
+                }
+            },
             modifier = Modifier.fillMaxWidth(),
             enabled = !uiState.isLoading && email.isNotBlank() && password.isNotBlank()
         ) {
@@ -70,10 +77,22 @@ fun LoginScreen(
                     strokeWidth = 2.dp
                 )
                 Spacer(modifier = Modifier.width(8.dp))
-                Text("Signing in...")
+                Text(if (isSignUpMode) "Creating account..." else "Signing in...")
             } else {
-                Text("Sign In")
+                Text(if (isSignUpMode) "Sign Up" else "Sign In")
             }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        TextButton(
+            onClick = { isSignUpMode = !isSignUpMode },
+            enabled = !uiState.isLoading
+        ) {
+            Text(
+                if (isSignUpMode) "Already have an account? Sign In" 
+                else "Don't have an account? Sign Up"
+            )
         }
 
         uiState.error?.let { error ->
